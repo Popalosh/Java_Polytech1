@@ -5,12 +5,14 @@ import java.util.*;
 public class Graph {
 
     public Map<String, List<Pair<String, Integer>>> directedGraph;
+    public List<Pair<String, Integer>> neighbors;
 
-    Graph(Map<String, List<Pair<String, Integer>>> directedGraph) {
+    Graph() {
         this.directedGraph = directedGraph;
+        this.neighbors = neighbors;
     }
 
-    public void addVertex(String vertexName, List<Pair<String, Integer>> neighbors) {
+    public void addVertex(String vertexName) {
         if (!directedGraph.containsKey(vertexName)) {
             directedGraph.put(vertexName, neighbors);
         } else throw new IllegalArgumentException("Вершина уже существует");
@@ -50,9 +52,23 @@ public class Graph {
 
     public void renameVertex(String oldName, String newName) {
         if (directedGraph.containsKey(oldName) && !directedGraph.containsKey(newName)) {
+
+            for (String vertex : directedGraph.keySet()) {
+                if (!vertex.equals(oldName)) {
+                    for (Pair<String, Integer> pair : directedGraph.get(vertex)) {
+                        if (pair.getKey().equals(oldName)) {
+                            Integer oldWeight = pair.getValue();
+                            directedGraph.get(vertex).remove(pair);
+                            directedGraph.get(vertex).add(new Pair<>(newName, oldWeight));
+                        }
+                    }
+                }
+            }
+
             List<Pair<String, Integer>> oldNeighbors = directedGraph.get(oldName);
             directedGraph.remove(oldName, directedGraph.get(oldName));
             directedGraph.put(newName, oldNeighbors);
+
         } else throw new IllegalArgumentException("Вершина не найдена");
     }
 
@@ -71,25 +87,23 @@ public class Graph {
     }
 
     public List<Pair<String, Integer>> getOutputArcs(String vertexName) {
-        List<Pair<String, Integer>> newList = null;
         if (directedGraph.containsKey(vertexName)) {
-            newList = directedGraph.get(vertexName);
-        }
-        return newList;
+            return directedGraph.get(vertexName);
+        } else throw new IllegalArgumentException("Вершина не найдена");
     }
 
     public List<Pair<String, Integer>> getInputArcs(String vertexName) {
-        List<Pair<String, Integer>> newList = null;
         if (directedGraph.containsKey(vertexName)) {
+            List<Pair<String, Integer>> newList = null;
             for (String otherVertex : directedGraph.keySet()) {
                 for (Pair<String, Integer> neighbor : directedGraph.get(otherVertex)) {
-                    if (otherVertex.equals(vertexName) && neighbor.getKey().equals(vertexName)) {
-                        newList.add(neighbor);
+                    if (!otherVertex.equals(vertexName) && neighbor.getKey().equals(vertexName)) {
+                        newList.add(new Pair<>(otherVertex,neighbor.getValue()));
                     }
                 }
             }
-        }
-        return newList;
+            return newList;
+        } else throw new IllegalArgumentException("Вершина не найдена");
     }
 
     @Override
