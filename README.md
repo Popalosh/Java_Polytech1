@@ -6,7 +6,7 @@ addArc() - adds a new directed arc from vertex called ("vertexName1") to vertex 
 but not vice versa // __Result__ type - __void__ <br />
 deleteVerex() - deletes a vertex with all mentionings about it // __Result__ type - __void__ <br />
 deletArc() - just deletes arc // __Result__ type - __void__ <br />
-renameVertex() - rename vertex // __Result__ type - __void__ <br />
+renameVertex() - renames vertex // __Result__ type - __void__ <br />
 reweight() - arc's weight changing // __Result__ type - __void__ <br />
 getOutputArcs() - returns a list of outgoing arcs // __Result__ type - __List<Pair<String,Integer>>__ <br />
 getInputArcs() - returns a list of ingoing arcs // __Result__ type - __List<Pair<String,Integer>>__
