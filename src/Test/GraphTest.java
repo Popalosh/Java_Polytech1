@@ -12,11 +12,7 @@ public class GraphTest {
     @BeforeEach
     void setup() {
         graph = new Graph();
-    }
 
-    @Test
-    public void getOutputArcs() {
-        graph = new Graph();
         graph.addVertex("A");
         graph.addVertex("B");
         graph.addVertex("C");
@@ -30,6 +26,10 @@ public class GraphTest {
         graph.renameVertex("C", "D");
 
         graph.reweight("D", 4, 47);
+    }
+
+    @Test
+    public void getOutputArcs() {
 
         assertEquals(List.of(new Pair<>("D", 3)), graph.getOutputArcs("A"));
         assertEquals(List.of(new Pair<>("A", 47)), graph.getOutputArcs("D"));
@@ -37,20 +37,6 @@ public class GraphTest {
 
     @Test
     public void getInputArcs() {
-        graph = new Graph();
-        graph.addVertex("A");
-        graph.addVertex("B");
-        graph.addVertex("C");
-
-        graph.addArc("A", "C", 3);
-        graph.addArc("A", "B", 56);
-        graph.addArc("C", "A", 4);
-
-        graph.deleteVertex("B");
-
-        graph.renameVertex("C", "D");
-
-        graph.reweight("D", 4, 47);
 
         assertEquals(List.of(new Pair<>("D", 47)), graph.getInputArcs("A"));
         assertEquals(List.of(new Pair<>("A", 3)), graph.getInputArcs("D"));
