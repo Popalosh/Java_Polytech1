@@ -1,4 +1,4 @@
-# JImplementation of the class of Directed Graph.
+# Implementation of the class of Directed Graph.
 
 Methods: <br />
 addVertex() - adds a new vertex without any arcs or smth // __Result__ type - __void__ <br />

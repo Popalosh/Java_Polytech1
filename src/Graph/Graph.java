@@ -6,29 +6,25 @@ public class Graph {
 
     private Map<String, List<Pair<String, Integer>>> directedGraph;
 
-    private List<Pair<String, Integer>> neighbors;
-
     Graph() {
         directedGraph = new HashMap<>();
-        neighbors = new ArrayList<>();
     }
 
-    Graph(Map<String, List<Pair<String, Integer>>> directedGraph, List<Pair<String, Integer>> neighbors) {
+    Graph(Map<String, List<Pair<String, Integer>>> directedGraph) {
         this.directedGraph = directedGraph;
-        this.neighbors = neighbors;
     }
 
     private boolean nullCheck() {
-        return directedGraph.isEmpty();
+        return directedGraph == null;
     }
 
     public void addVertex(String vertexName) {
         if (!nullCheck()) {
             if (!directedGraph.containsKey(vertexName)) {
-                directedGraph.put(vertexName, neighbors);
+                directedGraph.put(vertexName, new ArrayList<>());
             } else throw new IllegalArgumentException("Вершина уже существует");
         } else {
-            directedGraph.put(vertexName, neighbors);
+            directedGraph.put(vertexName, new ArrayList<>());
         }
     }
 
@@ -163,14 +159,12 @@ public class Graph {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Graph graph = (Graph) o;
-        return Objects.equals(directedGraph, graph.directedGraph) &&
-                Objects.equals(neighbors, graph.neighbors);
+        return Objects.equals(directedGraph, graph.directedGraph);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(directedGraph, neighbors);
+        return Objects.hash(directedGraph);
     }
-
 }

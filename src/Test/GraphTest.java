@@ -16,12 +16,16 @@ public class GraphTest {
         graph.addVertex("A");
         graph.addVertex("B");
         graph.addVertex("C");
+        graph.addVertex("P");
 
-        graph.addArc("A", "C", 3); // Данный метод работает как-то неверно
-        graph.addArc("A", "B", 56); // Данный метод работает как-то неверно
-        graph.addArc("C", "A", 4);  // Данный метод работает как-то неверно
+        graph.addArc("A", "C", 3);
+        graph.addArc("A", "B", 56);
+        graph.addArc("C", "A", 4);
+        graph.addArc("P","A",228);
+
 
         graph.deleteVertex("B");
+        graph.deleteVertex("P");
 
         graph.renameVertex("C", "D");
 
