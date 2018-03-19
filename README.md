@@ -8,5 +8,5 @@ deleteVerex() - deletes a vertex with all mentionings about it // __Result__ typ
 deletArc() - just deletes arc // __Result__ type - __void__ <br />
 renameVertex() - renames vertex // __Result__ type - __void__ <br />
 reweight() - arc's weight changing // __Result__ type - __void__ <br />
-getOutputArcs() - returns a list of outgoing arcs // __Result__ type - __List<Pair<String,Integer>>__ <br />
-getInputArcs() - returns a list of ingoing arcs // __Result__ type - __List<Pair<String,Integer>>__
+getOutputArcs() - returns a list of outgoing arcs // __Result__ type - __Map<String,Integer>>__ <br />
+getInputArcs() - returns a list of ingoing arcs // __Result__ type - __Map<String,Integer>>__
