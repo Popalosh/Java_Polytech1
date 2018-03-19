@@ -1,17 +1,16 @@
-
 import javafx.util.Pair;
 
 import java.util.*;
 
 public class Graph {
 
-    private Map<String, List<Pair<String, Integer>>> directedGraph;
+    private Map<String, Map<String, Integer>> directedGraph;
 
     Graph() {
         directedGraph = new HashMap<>();
     }
 
-    Graph(Map<String, List<Pair<String, Integer>>> directedGraph) {
+    Graph(Map<String, Map<String, Integer>> directedGraph) {
         this.directedGraph = directedGraph;
     }
 
@@ -22,10 +21,10 @@ public class Graph {
     public void addVertex(String vertexName) {
         if (!checkEmpty()) {
             if (!directedGraph.containsKey(vertexName)) {
-                directedGraph.put(vertexName, new ArrayList<>());
+                directedGraph.put(vertexName, new HashMap<>());
             } else throw new IllegalArgumentException("Вершина уже существует");
         } else {
-            directedGraph.put(vertexName, new ArrayList<>());
+            directedGraph.put(vertexName, new HashMap<>());
         }
     }
 
@@ -33,9 +32,9 @@ public class Graph {
         if (!checkEmpty()) {
             if (directedGraph.containsKey(vertexName1) && directedGraph.containsKey(vertexName2)) {
                 if (directedGraph.get(vertexName1).isEmpty()) {
-                    directedGraph.get(vertexName1).add(new Pair<>(vertexName2, arcWeight)); // Ошибка должна быть где-то тут
-                } else if (!directedGraph.get(vertexName1).contains(new Pair<>(vertexName2, arcWeight))) {
-                    directedGraph.get(vertexName1).add(new Pair<>(vertexName2, arcWeight));
+                    directedGraph.get(vertexName1).put(vertexName2, arcWeight);
+                } else if (!directedGraph.get(vertexName1).containsKey(vertexName2) ) {
+                    directedGraph.get(vertexName1).put(vertexName2, arcWeight);
                 } else throw new IllegalArgumentException("Дуга уже существует");
             } else throw new IllegalArgumentException();
         } else throw new IllegalArgumentException("Граф пустой");
@@ -49,29 +48,30 @@ public class Graph {
                 Map<String, Pair<String, Integer>> names = new HashMap<>();
 
                 for (String name : directedGraph.keySet()) {
-                    for (Pair<String, Integer> pair : directedGraph.get(name)) {
-                        if (pair.getKey().equals(vertexName)) {
-                            names.put(name, pair);
+                    for ( String key : directedGraph.get(name).keySet()) {
+                        if (key.equals(vertexName)) {
+                            names.put(name, new Pair<>(key,directedGraph.get(name).get(key)));
                         }
                     }
                 }
 
                 for (String name : names.keySet()) {
-                    directedGraph.get(name).remove(names.get(name));
+                    directedGraph.get(name).remove( names.get(name).getKey(),
+                            names.get(name).getValue() );
                 }
 
             } else throw new IllegalArgumentException("Вершина не найдена");
         } else throw new IllegalArgumentException("Граф пустой");
     }
 
-    public void deleteArc(String vertexName, Integer arcWeight) {
+    public void deleteArc(String vertexName1, String vertexName2) {
         if (!checkEmpty()) {
-            if (directedGraph.containsKey(vertexName)) {
-                for (List<Pair<String, Integer>> neighbors : directedGraph.values()) {
-                    if (neighbors == directedGraph.get(vertexName)) {
-                        for (Pair<String, Integer> neighbor : neighbors) {
-                            if (neighbor.getValue().equals(arcWeight)) {
-                                neighbors.remove(neighbor);
+            if (directedGraph.containsKey(vertexName1)) {
+                for (Map<String, Integer> neighbors : directedGraph.values()) {
+                    if (neighbors == directedGraph.get(vertexName1)) {
+                        for (String key : neighbors.keySet()) {
+                            if (key.equals(vertexName2)) {
+                                neighbors.remove(key,neighbors.get(key));
                                 break;
                             }
                         }
@@ -89,9 +89,9 @@ public class Graph {
 
                 for (String vertex : directedGraph.keySet()) {
                     if (!vertex.equals(oldName)) {
-                        for (Pair<String, Integer> pair : directedGraph.get(vertex)) {
-                            if (pair.getKey().equals(oldName)) {
-                                arcs.put(vertex, pair);
+                        for (String key : directedGraph.get(vertex).keySet()) {
+                            if (key.equals(oldName)) {
+                                arcs.put(vertex, new Pair<>(key,directedGraph.get(vertex).get(key)));
                             }
                         }
                     }
@@ -100,11 +100,11 @@ public class Graph {
 
                 for (String name : arcs.keySet()) {
                     Integer oldWeight = arcs.get(name).getValue();
-                    directedGraph.get(name).remove(directedGraph.get(name).indexOf(arcs.get(name)));
-                    directedGraph.get(name).add(new Pair<>(newName, oldWeight));
+                    directedGraph.get(name).remove(oldName,oldWeight);
+                    directedGraph.get(name).put(newName, oldWeight);
                 }
 
-                List<Pair<String, Integer>> oldNeighbors = directedGraph.get(oldName);
+                Map<String, Integer> oldNeighbors = directedGraph.get(oldName);
                 directedGraph.remove(oldName, directedGraph.get(oldName));
                 directedGraph.put(newName, oldNeighbors);
 
@@ -112,26 +112,26 @@ public class Graph {
         } else throw new IllegalArgumentException("Граф пустой");
     }
 
-    public void reweight(String vertexName, Integer oldWeight, Integer newWeight) {
+    public void reweight(String vertexName1, String vertexName2, Integer newWeight) {
         if (!checkEmpty()) {
-            if (directedGraph.containsKey(vertexName)) {
-                List<Pair<String, Integer>> neighbors = directedGraph.get(vertexName);
-                List<Pair<String, Integer>> list = new ArrayList<>();
-                for (Pair<String, Integer> neighbor : neighbors) {
-                    if (neighbor.getValue().equals(oldWeight)) {
-                        list.add(neighbor);
+            if (directedGraph.containsKey(vertexName1)) {
+                Map<String, Integer> neighbors = directedGraph.get(vertexName1);
+                Map<String, Integer> map = new HashMap<>();
+                for (String key : neighbors.keySet()) {
+                    if (key.equals(vertexName2)) {
+                        map.put(key,neighbors.get(key));
                         break;
                     }
                 }
-                for (Pair<String, Integer> neighbor : list) {
-                    neighbors.remove(neighbor);
-                    neighbors.add(new Pair<>(neighbor.getKey(), newWeight));
+                for (String key : map.keySet()) {
+                    neighbors.remove(key,map.get(key));
+                    neighbors.put(key, newWeight);
                 }
             } else throw new IllegalArgumentException("Вершина не найдена");
         } else throw new IllegalArgumentException("Граф пустой");
     }
 
-    public List<Pair<String, Integer>> getOutputArcs(String vertexName) {
+    public Map<String, Integer> getOutputArcs(String vertexName) {
         if (!checkEmpty()) {
             if (directedGraph.containsKey(vertexName)) {
                 return directedGraph.get(vertexName);
@@ -139,18 +139,18 @@ public class Graph {
         } else throw new IllegalArgumentException("Граф пустой");
     }
 
-    public List<Pair<String, Integer>> getInputArcs(String vertexName) {
+    public Map<String, Integer> getInputArcs(String vertexName) {
         if (!checkEmpty()) {
             if (directedGraph.containsKey(vertexName)) {
-                List<Pair<String, Integer>> newList = new ArrayList<>();
+                Map<String, Integer> map = new HashMap<>();
                 for (String otherVertex : directedGraph.keySet()) {
-                    for (Pair<String, Integer> neighbor : directedGraph.get(otherVertex)) {
-                        if (!otherVertex.equals(vertexName) && neighbor.getKey().equals(vertexName)) {
-                            newList.add(new Pair<>(otherVertex, neighbor.getValue()));
+                    for (String key : directedGraph.get(otherVertex).keySet()) {
+                        if (!otherVertex.equals(vertexName) && key.equals(vertexName)) {
+                            map.put(otherVertex,directedGraph.get(otherVertex).get(key));
                         }
                     }
                 }
-                return newList;
+                return map;
             } else throw new IllegalArgumentException("Вершина не найдена");
         } else throw new IllegalArgumentException("Граф пустой");
     }
@@ -158,7 +158,7 @@ public class Graph {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Graph)) return false;
         Graph graph = (Graph) o;
         return Objects.equals(directedGraph, graph.directedGraph);
     }

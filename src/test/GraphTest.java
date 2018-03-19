@@ -1,12 +1,11 @@
-import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GraphTest {
+class GraphTest {
     private Graph graph;
 
     @BeforeEach
@@ -29,20 +28,20 @@ public class GraphTest {
 
         graph.renameVertex("C", "D");
 
-        graph.reweight("D", 4, 47);
+        graph.reweight("D", "A", 47);
     }
 
     @Test
-    public void getOutputArcs() {
+    void getOutputArcs() {
 
-        assertEquals(List.of(new Pair<>("D", 3)), graph.getOutputArcs("A"));
-        assertEquals(List.of(new Pair<>("A", 47)), graph.getOutputArcs("D"));
+        assertEquals(Map.of("D", 3), graph.getOutputArcs("A"));
+        assertEquals(Map.of("A", 47), graph.getOutputArcs("D"));
     }
 
     @Test
-    public void getInputArcs() {
+    void getInputArcs() {
 
-        assertEquals(List.of(new Pair<>("D", 47)), graph.getInputArcs("A"));
-        assertEquals(List.of(new Pair<>("A", 3)), graph.getInputArcs("D"));
+        assertEquals(Map.of("D", 47), graph.getInputArcs("A"));
+        assertEquals(Map.of("A", 3), graph.getInputArcs("D"));
     }
 }
