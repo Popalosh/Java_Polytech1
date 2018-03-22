@@ -33,14 +33,12 @@ class GraphTest {
 
     @Test
     void getOutputArcs() {
-
         assertEquals(Map.of("D", 3), graph.getOutputArcs("A"));
         assertEquals(Map.of("A", 47), graph.getOutputArcs("D"));
     }
 
     @Test
     void getInputArcs() {
-
         assertEquals(Map.of("D", 47), graph.getInputArcs("A"));
         assertEquals(Map.of("A", 3), graph.getInputArcs("D"));
     }
