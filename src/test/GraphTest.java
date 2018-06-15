@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,35 +12,72 @@ class GraphTest {
     @BeforeEach
     void setup() {
         graph = new Graph();
+    }
 
+    @Test
+    void addVertex() {
+        graph.addVertex("A");
+        assertEquals(Map.of("A", new HashMap<>()), graph.getDirectedGraph());
+    }
+
+    @Test
+    void addArc() {
         graph.addVertex("A");
         graph.addVertex("B");
-        graph.addVertex("C");
-        graph.addVertex("P");
+        graph.addArc("A" ,"B",3);
+        assertEquals(Map.of("A", Map.of("B",3),"B",new HashMap<>()),graph.getDirectedGraph());
+    }
 
-        graph.addArc("A", "C", 3);
-        graph.addArc("A", "B", 56);
-        graph.addArc("C", "A", 4);
-        graph.addArc("P","A",228);
-
-
+    @Test
+    void deleteVertex() {
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
         graph.deleteVertex("B");
-        graph.deleteVertex("P");
+        assertEquals(Map.of("A",new HashMap<>()),graph.getDirectedGraph());
+    }
 
-        graph.renameVertex("C", "D");
+    @Test
+    void deleteArc() {
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
+        graph.deleteArc("A","B");
+        assertEquals(Map.of("A",new HashMap<>(),"B",new HashMap<>()),graph.getDirectedGraph());
+    }
 
-        graph.reweight("D", "A", 47);
+    @Test
+    void renameVertex() {
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
+        graph.renameVertex("B","D");
+        assertEquals(Map.of("A", Map.of("D",3),"D",new HashMap<>()),graph.getDirectedGraph());
+    }
+
+    @Test
+    void reweight() {
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
+        graph.reweight("A","B",1337);
+        assertEquals(Map.of("A", Map.of("B",1337),"B",new HashMap<>()),graph.getDirectedGraph());
     }
 
     @Test
     void getOutputArcs() {
-        assertEquals(Map.of("D", 3), graph.getOutputArcs("A"));
-        assertEquals(Map.of("A", 47), graph.getOutputArcs("D"));
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
+        assertEquals(Map.of("B",3),graph.getOutputArcs("A"));
     }
 
     @Test
     void getInputArcs() {
-        assertEquals(Map.of("D", 47), graph.getInputArcs("A"));
-        assertEquals(Map.of("A", 3), graph.getInputArcs("D"));
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addArc("A" ,"B",3);
+        assertEquals(Map.of("A",3),graph.getInputArcs("B"));
     }
+
 }

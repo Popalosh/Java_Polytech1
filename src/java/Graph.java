@@ -15,11 +15,7 @@ public class Graph {
     }
 
     public void addVertex(String vertexName) {
-        if (!directedGraph.isEmpty()) {
-            directedGraph.put(vertexName, new HashMap<>());
-        } else {
-            directedGraph.put(vertexName, new HashMap<>());
-        }
+        directedGraph.put(vertexName, new HashMap<>());
     }
 
     public void addArc(String vertexName1, String vertexName2, Integer arcWeight) {
@@ -48,16 +44,7 @@ public class Graph {
     }
 
     public void deleteArc(String vertexName1, String vertexName2) {
-        for (Map<String, Integer> neighbors : directedGraph.values()) {
-            if (neighbors == directedGraph.get(vertexName1)) {
-                for (String key : neighbors.keySet()) {
-                    if (key.equals(vertexName2)) {
-                        neighbors.remove(key, neighbors.get(key));
-                        break;
-                    }
-                }
-            }
-        }
+        directedGraph.get(vertexName1).remove(vertexName2);
     }
 
     public void renameVertex(String oldName, String newName) {
@@ -114,6 +101,10 @@ public class Graph {
             }
         }
         return map;
+    }
+
+    public Map<String, Map<String, Integer>> getDirectedGraph() {
+        return directedGraph;
     }
 
     @Override
